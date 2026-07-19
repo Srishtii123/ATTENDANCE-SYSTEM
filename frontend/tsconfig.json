@@ -1,0 +1,40 @@
+{
+  "ignoreDeprecations": "6.0",
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+ 
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+
+    "noEmit": false,
+    "jsx": "react-jsx",
+
+    "noUnusedLocals": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
+
+    "types": [],
+    "typeRoots": ["./types"],
+
+    "baseUrl": "./src",
+    "rootDir": "./src",
+    "outDir": "./dist",
+
+    "downlevelIteration": true
+  },
+  "include": ["src/index.tsx", "src/react-app-env.d.ts", "src/types/**/*.d.ts"],
+  "exclude": ["node_modules"]
+}

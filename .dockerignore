@@ -1,0 +1,16 @@
+node_modules
+build
+.git
+.env
+*.log
+*.tsbuildinfo
+README.md
+docs
+backend/node_modules
+backend/build
+backend/tsconfig.tsbuildinfo
+backend/logs
+backend/models
+frontend/node_modules
+frontend/build
+frontend/tsconfig.tsbuildinfo

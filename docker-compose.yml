@@ -1,0 +1,76 @@
+services:
+
+  face-service:
+    image: ams-docker-face-service:${AMS_IMAGE_TAG:-latest}
+    build:
+      context: ./face-service
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      INSIGHTFACE_MODEL_NAME: ${INSIGHTFACE_MODEL_NAME:-buffalo_s}
+      INSIGHTFACE_DET_SIZE: ${INSIGHTFACE_DET_SIZE:-640}
+      INSIGHTFACE_DET_THRESH: ${INSIGHTFACE_DET_THRESH:-0.65}
+      FACE_MAX_IMAGE_SIDE: ${FACE_MAX_IMAGE_SIDE:-960}
+    volumes:
+      - face_models:/root/.insightface
+    ports:
+      - "8001:8000"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8000/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 8
+      start_period: 45s
+
+  backend:
+    image: ams-docker-backend:${AMS_IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    ports:
+      - "3501:3500"  # Host:Container
+
+    depends_on:
+      face-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"fetch('http://localhost:3500/health').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))\""]
+      interval: 20s
+      timeout: 5s
+      retries: 6
+      start_period: 60s
+
+  frontend:
+    image: ams-docker-frontend:${AMS_IMAGE_TAG:-latest}
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_API_URL: https://ams-new.bayanattechnology.com
+        REACT_APP_FRONTEND_URL: https://ams-new.bayanattechnology.com
+        REACT_APP_BACKEND_URL: https://ams-new.bayanattechnology.com
+        REACT_APP_VERSION: ${AMS_IMAGE_TAG:-AMS}
+        REACT_APP_USE_MOCK_LOCATION: "false"
+        FRONTEND_NODE_OPTIONS: ${FRONTEND_NODE_OPTIONS:---max-old-space-size=1536}
+
+    env_file:
+      - ./frontend/.env.production
+
+    restart: unless-stopped
+
+    ports:
+      - "3001:80"
+
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  face_models:
+
