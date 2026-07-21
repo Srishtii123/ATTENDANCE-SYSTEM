@@ -121,6 +121,8 @@ export default {
     attendance_records: "attendance_records",
     attendance_events: "attendance_events",
     attendance_requests: "attendance_requests",
+    EMPLOYEE_FACE_ARCFACE: "EMPLOYEE_FACE_ARCFACE",
+    
     //------------------ SMS TABLE -----------------
     SMS_COMPANY: "SMS_COMPANY",
     SMS_SERVICE: "SMS_SERVICE",

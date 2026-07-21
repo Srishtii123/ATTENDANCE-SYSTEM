@@ -16,6 +16,7 @@ import { FaceRecognitionService } from "./face_recognition.service";
 import { S3Service } from "../../services/s3Upload.service";
 import { CacheService } from "./cache.service";
 import AttendanceRequest, { AttendanceRequestStatus } from "../../models/Attendance/attendance_request";
+import EmployeeFaceArcface from "../../models/Attendance/employee_face_arcface";
 
 //  FIXED PERFORMANCE CONSTANTS
 const AttendanceStatus = {
@@ -1263,29 +1264,64 @@ private static async sendProxyAlertEmailWithImage(data: any, actualEmployeeCode:
   }
 
   // 🎯 GET EMPLOYEE IMAGE
-  private static async getEmployeeImage(employeeId: string): Promise<string | null> {
-    try {
-      const cacheKey = `employee_face:${employeeId}`;
-      let imageUrl = await this.cache.get(cacheKey);
+  // private static async getEmployeeImage(employeeId: string): Promise<string | null> {
+  //   try {
+  //     const cacheKey = `employee_face:${employeeId}`;
+  //     let imageUrl = await this.cache.get(cacheKey);
       
-      if (!imageUrl) {
+  //     if (!imageUrl) {
+  //       const employeeFace = await EmployeeFace.findOne({
+  //         where: { employee_id: employeeId, is_active: true },
+  //         raw: true
+  //       });
+        
+  //       imageUrl = employeeFace ? await S3Service.getSignedUrl(employeeFace.s3_key) : null;
+        
+  //       if (imageUrl) {
+  //         await this.cache.set(cacheKey, imageUrl, CACHE_TTL);
+  //       }
+  //     }
+      
+  //     return imageUrl;
+  //   } catch (error) {
+  //     return null;
+  //   }
+  // }
+
+  private static async getEmployeeImage(employeeId: string): Promise<string | null> {
+  try {
+    const cacheKey = `employee_face:${employeeId}`;
+    let imageUrl = await this.cache.get(cacheKey);
+
+    if (!imageUrl) {
+      const arcFace = await EmployeeFaceArcface.findOne({
+        where: { employee_id: employeeId, is_active: 1 },
+        order: [["created_at", "DESC"]],
+        raw: true
+      });
+
+      let s3Key = arcFace?.s3_key;
+
+      if (!s3Key) {
         const employeeFace = await EmployeeFace.findOne({
           where: { employee_id: employeeId, is_active: true },
           raw: true
         });
-        
-        imageUrl = employeeFace ? await S3Service.getSignedUrl(employeeFace.s3_key) : null;
-        
-        if (imageUrl) {
-          await this.cache.set(cacheKey, imageUrl, CACHE_TTL);
-        }
+        s3Key = employeeFace?.s3_key;
       }
-      
-      return imageUrl;
-    } catch (error) {
-      return null;
+
+      imageUrl = s3Key ? await S3Service.getSignedUrl(s3Key) : null;
+
+      if (imageUrl) {
+        await this.cache.set(cacheKey, imageUrl, CACHE_TTL);
+      }
     }
+
+    return imageUrl;
+  } catch (error) {
+    return null;
   }
+}
 
   // 🎯 FIXED CHECK IF UUID IS CANCELLED IN DATABASE
   private static async isCancelledInDatabase(uuid: string): Promise<boolean> {

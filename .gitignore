@@ -5,3 +5,5 @@ node_modules
 /build
 logs
 oracle
+/.env.production
+frontend/.env.production

@@ -43,6 +43,7 @@ export class AttendanceController {
 
       // Validate image
       validateImage(req, res, () => {});
+      if (res.headersSent) return;
 
 
       const faceService = await FaceRecognitionService.getInstance();
@@ -86,6 +87,11 @@ export class AttendanceController {
         res.status(404).json({ error: "Employee not recognized" });
         return;
       }
+      // const blockLowConfidence = String(process.env.FACE_BLOCK_LOW_CONFIDENCE || "false").toLowerCase() === "true";
+      //     if (match.confidenceBand === "low" && blockLowConfidence) {
+      //    res.status(409).json({ success: false, requires_manual_request: true, error: "Recognition confidence is low. Please submit a manual request.", confidence: match.confidence, confidenceBand: match.confidenceBand });
+      //   return;
+      // }
 
       // Prepare location data
       let locationData: any = null;
