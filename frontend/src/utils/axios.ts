@@ -2,8 +2,9 @@ import axios, { AxiosRequestHeaders, InternalAxiosRequestConfig } from 'axios';
 import rawAxios from 'axios';
 import { getAccessToken } from './functions';
 
-const DEFAULT_API = process.env.REACT_APP_API_URL || window.location.origin;
+const DEFAULT_API = process.env.REACT_APP_API_URL || 'http://localhost:3500' || window.location.origin;
 const axiosServices = axios.create({ baseURL: DEFAULT_API, withCredentials: true });
+console.log('AXIOS BASE URL:', axiosServices.defaults.baseURL);
 type TAxiosRequestHeadersWithCoords = {
   'x-longitude': string;
   'x-latitude': string;

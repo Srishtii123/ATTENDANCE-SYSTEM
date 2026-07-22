@@ -19,8 +19,17 @@ import { AttendanceService } from "./src/services/Attendance/Attendance.service"
 
 const app = express();
 
-app.use(cors());
+app.use(cors(
+{origin: process.env.FRONTEND_URL || "http://localhost:3000",
+  credentials: true,
+}
+));
 app.use(express.json());
+
+app.use((req, res, next) => {
+  console.log(`[BACKEND HIT] ${req.method} ${req.originalUrl}`);
+  next();
+});
 app.use(express.urlencoded({ extended: true }));
 
 
@@ -172,8 +181,8 @@ async function initializeAllServices() {
     ]);
     
     // 4. Initialize scheduler
-    console.log('🔄 Initializing attendance scheduler...');
-    AttendanceEventScheduler.initializeScheduler();
+    // console.log('🔄 Initializing attendance scheduler...');
+    // AttendanceEventScheduler.initializeScheduler();
     
     console.log('✅ All services initialized successfully');
     
