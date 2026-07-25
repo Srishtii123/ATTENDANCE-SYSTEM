@@ -6,7 +6,7 @@ RUN npm install --legacy-peer-deps --no-audit --no-fund
 FROM base AS dev
 COPY . .
 ENV HOST=0.0.0.0
-ENV PORT=3001
+ENV PORT=3000
 ENV BROWSER=none
 EXPOSE 3000
 CMD ["npm", "start"]
