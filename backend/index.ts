@@ -202,5 +202,4 @@ initializeAllServices()
   })
   .catch((err) => {
     console.log("Error initializing services:", err);
-    process.exit(1);
   });
