@@ -55,7 +55,7 @@ axiosServices.interceptors.response.use(
     if (status === 401 && !originalRequest?._retry && !window.location.href.includes('/login')) {
       originalRequest._retry = true;
       return rawAxios
-        .post(`${DEFAULT_API}/api/auth/refresh`, {}, { withCredentials: true })
+        .post(`${DEFAULT_API}/auth/refresh`, {}, { withCredentials: true })
         .then((refreshRes) => {
           const newToken = refreshRes?.data?.data?.token;
           if (newToken) {
