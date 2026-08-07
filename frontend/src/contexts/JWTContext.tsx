@@ -95,7 +95,7 @@ export const JWTProvider = ({ children }: { children: React.ReactElement }) => {
       // ignore storage errors
     }
 
-    const response = await axios.post('/auth/login', { email, password }, { withCredentials: true });
+    const response = await axios.post('/api/auth/login', { email, password }, { withCredentials: true });
     const { token, tenantId } = response.data.data;
     setSession(token);
 
@@ -148,7 +148,7 @@ export const JWTProvider = ({ children }: { children: React.ReactElement }) => {
         // If no token or token expired, try refresh endpoint (cookie-based)
         if (!serviceToken || !verifyToken(serviceToken)) {
           try {
-            const refreshRes = await axios.post('/auth/refresh', {}, { withCredentials: true });
+            const refreshRes = await axios.post('/api/auth/refresh', {}, { withCredentials: true });
             tokenToUse = refreshRes?.data?.data?.token;
             if (tokenToUse) {
               window.localStorage.setItem('serviceToken', tokenToUse);
@@ -215,7 +215,7 @@ export const JWTProvider = ({ children }: { children: React.ReactElement }) => {
 
   const register = async (email: string, password: string, firstName: string, lastName: string) => {
     const id = chance.bb_pin();
-    const response = await axios.post('/register', {
+    const response = await axios.post('/api/register', {
       id,
       email,
       password,
@@ -245,7 +245,7 @@ export const JWTProvider = ({ children }: { children: React.ReactElement }) => {
       window.localStorage.removeItem('company_code');
     } catch (e) {}
     try {
-      axios.post('/auth/logout', {}, { withCredentials: true }).catch(() => {});
+      axios.post('/api/auth/logout', {}, { withCredentials: true }).catch(() => {});
     } catch (e) {}
     setSession(null);
     dispatch({ type: LOGOUT });
