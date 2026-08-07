@@ -1,3 +1,4 @@
+import axios from "axios";
 import { Op } from "sequelize";
 import { differenceInMinutes } from "date-fns";
 import { v4 as uuidv4 } from "uuid";
@@ -5,6 +6,11 @@ import constants from "../../helpers/constants";
 import { sequelize } from "../../database/connection";
 import { notifyUser } from '../../helpers/functions'; 
 import logger from "../../utils/logger";
+
+const axiosServices = axios.create({
+  baseURL: process.env.BACKEND_BASE_URL || process.env.API_BASE_URL || "",
+  timeout: 15000,
+});
 import {
   Employee,
   AttendanceRecord,
@@ -184,6 +190,19 @@ export class AttendanceService {
     this.releaseRequestSlot();
   }
 }
+
+  getPerformanceSummary = async () => {
+    try {
+      const response = await axiosServices.get('api/attendance/performance/summary');
+      if (response.data?.success) {
+        return response.data.data;
+      }
+      throw new Error(response.data?.message || 'Failed to fetch performance summary');
+    } catch (error: unknown) {
+      const knownError = error as { message?: string; response?: any };
+      throw new Error(knownError.response?.data?.message || knownError.message || 'Failed to fetch performance summary');
+    }
+  };
 
   private static async calculateFaceConfidenceBalanced(employeeId: string, imageBuffer: Buffer): Promise<number> {
     try {

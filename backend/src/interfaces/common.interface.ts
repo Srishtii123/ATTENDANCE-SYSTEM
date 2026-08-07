@@ -332,7 +332,7 @@ export interface LogDataInterface {
   loginid?: string;
   module?: string;
   description?: string;
-  read?: string;
+  read_flag?: string;
   created_by?: string;
   updated_by?: string;
   created_at?: Date;

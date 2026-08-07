@@ -11,7 +11,7 @@ import Localization from './Localization';
 import Notification from './Notification';
 import useConfig from 'hooks/useConfig';
 import { MenuOrientation, ThemeDirection, ThemeMode } from 'types/config';
-import bayanatLogo from '../../../../assets/bayanatLogo.png';
+import logo from 'assets/images/logo.png';
 import { dispatch, useSelector } from 'store';
 import useAuth from 'hooks/useAuth';
 import { setSelectedApp } from 'store/reducers/customReducer/slice.menuSelectionSlice';
@@ -375,7 +375,7 @@ const HeaderContent = ({ isCollapsed, setIsCollapsed }: HeaderProps) => {
           <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
             {/* Drawer Header */}
             <Box sx={{ p: 2, display: 'flex', alignItems: 'center', gap: 2, borderBottom: '1px solid #2c2f35' }}>
-              <img className="w-20 h-10" src={bayanatLogo} alt="logo" />
+              <img className="w-20 h-10" src={logo} alt="logo" />
               <Typography
                 variant="h4"
                 sx={{

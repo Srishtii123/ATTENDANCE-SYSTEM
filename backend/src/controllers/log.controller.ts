@@ -78,7 +78,7 @@ export const getUnReadLogsCount = async (
       where: {
         company_code: requestUser.company_code,
         loginid: requestUser.loginid,
-        read: "N",
+        read_flag: "N",
       },
     });
 
@@ -111,14 +111,14 @@ export const updateReadLog = async (req: RequestWithUser, res: Response) => {
     // Update the read status of logs for the current user.
     const updateReadLog = await Log.update(
       {
-        read: "Y",
+        read_flag: "Y",
         updated_by: requestUser.loginid,
       },
       {
         where: {
           company_code: requestUser.company_code,
           loginid: requestUser.loginid,
-          read: "N",
+          read_flag: "N",
         },
       }
     );

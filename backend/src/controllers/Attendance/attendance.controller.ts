@@ -4,7 +4,11 @@ import { FaceRecognitionService } from "../../services/Attendance/face_recogniti
 import { AttendanceService } from "../../services/Attendance/Attendance.service";
 import { validateImage } from "../../middleware/security.middleware";
 import logger from "../../utils/logger";
-import { Employee } from "../../models/Attendance/associations";
+import { Op, fn, col } from "sequelize";
+import { Employee, AttendanceEvent, ProxyLog } from "../../models/Attendance/associations";
+import AttendanceRequest from "../../models/Attendance/attendance_request";
+import EmployeeFaceArcface from "../../models/Attendance/employee_face_arcface";
+
 
 try {
   require('@tensorflow/tfjs-node');
@@ -14,7 +18,95 @@ try {
 }
 
 export class AttendanceController {
-  
+
+  static async getPerformanceSummary(req: Request, res: Response): Promise<void> {
+    try {
+      const company_code = (req as any).user?.company_code;
+      if (!company_code) {
+        res.status(400).json({ success: false, message: "Company code is required" });
+        return;
+      }
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const tomorrow = new Date(today.getTime() + 86400000);
+
+      const [
+        todayEvents,
+        pendingRequests,
+        todayProxyLogs,
+        employees,
+        activeDescriptors,
+        employeesWithDescriptors,
+        confidenceRows,
+      ] = await Promise.all([
+        AttendanceEvent.count({
+          where: {
+            company_code,
+            event_time: { [Op.gte]: today, [Op.lt]: tomorrow },
+          },
+        }),
+        AttendanceRequest.count({ where: { company_code, status: "PENDING" as any } }),
+        ProxyLog.count({
+          where: {
+            // company_code,
+            timestamp: { [Op.gte]: today, [Op.lt]: tomorrow },
+          },
+        }),
+        Employee.count({ where: { company_code } }),
+        EmployeeFaceArcface.count({ where: { company_code, is_active: 1 } }),
+        EmployeeFaceArcface.count({
+          where: { company_code, is_active: 1 },
+          distinct: true,
+          col: "employee_id",
+        }),
+        AttendanceEvent.findOne({
+          attributes: [
+            [fn("AVG", col("confidence")), "avgConfidence"],
+            [fn("MIN", col("confidence")), "minConfidence"],
+            [fn("MAX", col("confidence")), "maxConfidence"],
+          ],
+          where: {
+            company_code,
+            event_time: { [Op.gte]: today, [Op.lt]: tomorrow },
+            confidence: { [Op.ne]: null },
+          },
+          raw: true,
+        }),
+      ]);
+
+      const descriptorEmployees = Number(employeesWithDescriptors || 0);
+      const coveragePercent = employees ? Number(((descriptorEmployees / employees) * 100).toFixed(1)) : 0;
+
+      res.status(200).json({
+        success: true,
+        data: {
+          todayEvents,
+          pendingRequests,
+          todayProxyLogs,
+          employees,
+          activeDescriptors,
+          employeesWithDescriptors: descriptorEmployees,
+          coveragePercent,
+          avgConfidence: Number(Number((confidenceRows as any)?.avgConfidence || 0).toFixed(2)),
+          minConfidence: (confidenceRows as any)?.minConfidence != null ? Number(Number((confidenceRows as any).minConfidence).toFixed(2)) : null,
+          maxConfidence: (confidenceRows as any)?.maxConfidence != null ? Number(Number((confidenceRows as any).maxConfidence).toFixed(2)) : null,
+          autoConfirmDelayMs: Number(process.env.ATTENDANCE_AUTO_CONFIRM_DELAY_MS || 3000),
+          thresholds: {
+            match: Number(process.env.FACE_MATCH_THRESHOLD || 0.42),
+            margin: Number(process.env.FACE_MATCH_MARGIN || 0.05),
+            highConfidence: Number(process.env.FACE_HIGH_CONFIDENCE_THRESHOLD || 78),
+            mediumConfidence: Number(process.env.FACE_MEDIUM_CONFIDENCE_THRESHOLD || 58),
+          },
+        },
+      });
+    } catch (error: unknown) {
+      logger.error("Attendance performance summary error", error);
+      const message = error instanceof Error ? error.message : String(error);
+      res.status(500).json({ success: false, message });
+    }
+  }
+
   static async markAttendance(req: Request, res: Response): Promise<void> {
      try {
       const { 

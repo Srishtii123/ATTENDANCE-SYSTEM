@@ -7,7 +7,7 @@ import { SxProps } from '@mui/system';
 
 // project import
 import { APP_DEFAULT_PATH } from 'config';
-import bayanatLogo from 'assets/images/bayanat.png';
+import logo from '../../assets/images/logo.png'
 
 interface Props {
   reverse?: boolean;
@@ -19,7 +19,7 @@ interface Props {
 const BTlogo = ({ sx, to }: Props) => {
   return (
     <ButtonBase disableRipple component={Link} to={to || APP_DEFAULT_PATH} sx={sx}>
-      <CardMedia component="img" src={bayanatLogo} sx={{ width: '200px', height: '50px' }} />
+      <CardMedia component="img" src={logo} sx={{ width: '200px', height: '50px' }} />
     </ButtonBase>
   );
 };

@@ -41,7 +41,6 @@ export const forgotPassword = async (req: Request, res: Response) => {
         <p><a href="${process.env.FRONTEND_URL}/reset-password?email=${user.dataValues.email_id}">Reset Password</a></p>
         <p>If you did not request this, please ignore this email.</p>
         <p>Best regards,</p>
-        <p>Bayanat Technology</p>
       `,
     });
 

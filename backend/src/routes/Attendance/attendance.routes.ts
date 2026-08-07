@@ -30,6 +30,7 @@ const getControllers = async () => {
     DashboardController,
     checkUserAuthorization,
     EmployeeService,
+    
   };
 };
 console;
@@ -86,6 +87,19 @@ router.get(
   }
 );
 /*--dashboard routes end--*/
+
+router.get(
+  "/performance/summary",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res, next) => {
+    const { checkUserAuthorization } = await getControllers();
+    return checkUserAuthorization(req, res, next);
+  },
+  async (req, res) => {
+    const { AttendanceController } = await getControllers();
+    return AttendanceController.getPerformanceSummary(req, res);
+  }
+);
 
 // Public route
 router.post(

@@ -694,7 +694,7 @@ const AttendanceMarking = () => {
             <div className="relative z-10 mt-8">
               <div className="flex items-center gap-3">
                 <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white">
-                  <img src="/bayanat-logo.png" alt="Bayanat" className="h-8 w-8 object-contain" />
+                  <img src="/logo.png" alt="Bayanat" className="h-8 w-8 object-contain" />
                 </div>
                 <div>
                   <h1 className="text-2xl font-bold tracking-normal">Smart Attendance</h1>

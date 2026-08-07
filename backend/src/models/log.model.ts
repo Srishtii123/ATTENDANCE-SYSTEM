@@ -31,7 +31,7 @@ Log.init(
       allowNull: false,
     },
     // Read status flag (Y/N) - Required, single character
-    read: {
+    read_flag: {
       type: DataTypes.STRING(1),
       allowNull: false,
     },
