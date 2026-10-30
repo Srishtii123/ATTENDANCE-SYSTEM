@@ -1,7 +1,7 @@
 services:
 
   face-service:
-    image: ${DOCKERHUB_USERNAME}/ams-docker-face-service:${AMS_IMAGE_TAG:-latest}
+   image: ${DOCKERHUB_USERNAME}/sriii1:face-latest
     build:
       context: ./face-service
       dockerfile: Dockerfile
@@ -23,7 +23,7 @@ services:
       start_period: 45s
 
   backend:
-    image: ${DOCKERHUB_USERNAME}/ams-docker-backend:${AMS_IMAGE_TAG:-latest}
+    image: ${DOCKERHUB_USERNAME}/sriii1:backend-latest
     build:
       context: .
       dockerfile: backend/Dockerfile
@@ -47,7 +47,7 @@ services:
       start_period: 60s
 
   frontend:
-    image: ${DOCKERHUB_USERNAME}/ams-docker-frontend:${AMS_IMAGE_TAG:-latest}
+    image: ${DOCKERHUB_USERNAME}/sriii1:frontend-latest
     build:
       context: ./frontend
       dockerfile: Dockerfile
