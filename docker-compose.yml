@@ -1,7 +1,7 @@
 services:
 
   face-service:
-    image: ams-docker-face-service:${AMS_IMAGE_TAG:-latest}
+    image: ${DOCKERHUB_USERNAME}/ams-docker-face-service:${AMS_IMAGE_TAG:-latest}
     build:
       context: ./face-service
       dockerfile: Dockerfile
@@ -23,7 +23,7 @@ services:
       start_period: 45s
 
   backend:
-    image: ams-docker-backend:${AMS_IMAGE_TAG:-latest}
+    image: ${DOCKERHUB_USERNAME}/ams-docker-backend:${AMS_IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: backend/Dockerfile
@@ -47,7 +47,7 @@ services:
       start_period: 60s
 
   frontend:
-    image: ams-docker-frontend:${AMS_IMAGE_TAG:-latest}
+    image: ${DOCKERHUB_USERNAME}/ams-docker-frontend:${AMS_IMAGE_TAG:-latest}
     build:
       context: ./frontend
       dockerfile: Dockerfile
@@ -60,7 +60,7 @@ services:
         FRONTEND_NODE_OPTIONS: ${FRONTEND_NODE_OPTIONS:---max-old-space-size=1536}
 
     env_file:
-      - ./frontend/.env.production
+      - ./frontend/.env
 
     restart: unless-stopped
 
