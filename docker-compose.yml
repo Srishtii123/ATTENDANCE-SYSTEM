@@ -52,9 +52,9 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        REACT_APP_API_URL: https://localhost:3500
-        REACT_APP_FRONTEND_URL: https://localhost:3000
-        REACT_APP_BACKEND_URL: https://localhost:3500
+        REACT_APP_API_URL: https://api-smartcheck.hubnode.in
+        REACT_APP_FRONTEND_URL: https://smartcheck.hubnode.in
+        REACT_APP_BACKEND_URL: https://api-smartcheck.hubnode.in
         REACT_APP_VERSION: ${AMS_IMAGE_TAG:-AMS}
         REACT_APP_USE_MOCK_LOCATION: "false"
         FRONTEND_NODE_OPTIONS: ${FRONTEND_NODE_OPTIONS:---max-old-space-size=1536}
