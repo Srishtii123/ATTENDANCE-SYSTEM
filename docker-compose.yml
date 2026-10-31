@@ -1,7 +1,7 @@
 services:
 
   face-service:
-   image: ${DOCKERHUB_USERNAME}/sriii1:face-latest
+    image: ${DOCKERHUB_USERNAME}/sriii1:face-latest
     build:
       context: ./face-service
       dockerfile: Dockerfile
