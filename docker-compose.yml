@@ -31,7 +31,7 @@ services:
     restart: unless-stopped
 
     env_file:
-      - .env
+      - ./backend/.env
 
     ports:
       - "3500:3500"  # Host:Container
