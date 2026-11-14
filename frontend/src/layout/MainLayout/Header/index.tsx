@@ -21,7 +21,7 @@ const Header = ({ isCollapsed, setIsCollapsed}: HeaderProps) => {
   const headerContent = useMemo(() => <HeaderContent isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />, []);
 
   // const mainHeader: ReactNode = <Toolbar sx={{ minHeight: 28 }}>{headerContent}</Toolbar>;
-  const mainHeader: ReactNode = <div className="flex">{headerContent}</div>;
+  const mainHeader: ReactNode = <div className="flex min-h-16 w-full items-center">{headerContent}</div>;
 
   const appBar: AppBarProps = {
     className: 'ams-app-header',
@@ -29,11 +29,13 @@ const Header = ({ isCollapsed, setIsCollapsed}: HeaderProps) => {
     color: 'inherit',
     elevation: 0,
     sx: {
-      borderBottom: '1px solid #2c2f35',
+      borderBottom: '1px solid #27334a',
       zIndex: 1200,
       width: { xs: '100%' },
-      backgroundColor: '#111318',
-      color: '#f2f2f0'
+      minHeight: 64,
+      px: { xs: 1, md: 2 },
+      backgroundColor: '#111a2e',
+      color: '#f7f9fc'
     }
   };
 

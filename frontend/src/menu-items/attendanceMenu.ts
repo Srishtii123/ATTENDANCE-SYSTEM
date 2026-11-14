@@ -8,6 +8,12 @@ export const attendanceMenuTree: NavItemType[] = [
     url_path: 'attendance',
     children: [
       {
+        id: 'attendance_dashboard',
+        title: 'Dashboard',
+        type: 'item',
+        url_path: '/attendance/dashboard'
+      },
+      {
         id: 'attendance_approvals',
         title: 'Approvals',
         type: 'item',

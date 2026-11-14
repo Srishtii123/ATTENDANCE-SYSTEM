@@ -29,24 +29,62 @@ export const comparePassword = async (args: ComparePasswordInterface) => {
 };
 
 // Function to generate a JSON Web Token (JWT)
-export const generateToken = async (args: GenerateTokenInterface) => {
-  // Destructure username, email_id, and loginid from arguments
-  const { username, email_id, loginid } = args;
+// export const generateToken = async (args: GenerateTokenInterface) => {
+//   // Destructure username, email_id, and loginid from arguments
+//   const { username, email_id, loginid } = args;
 
-  // Sign the JWT with the provided data and set expiration to 24 hours
-  const token = jsonwebtoken.sign(
-    {
-      username,
-      email_id,
-      loginid,
-    },
-    constants.AUTHENTICATION.APP_SECRET,
-    {
-      expiresIn: "72h",
-    }
+//   // Sign the JWT with the provided data and set expiration to 24 hours
+//   const token = jsonwebtoken.sign(
+//     {
+//       username,
+//       email_id,
+//       loginid,
+//     },
+//     constants.AUTHENTICATION.APP_SECRET,
+//     {
+//       expiresIn: "72h",
+//     }
+//   );
+//   // Return the generated token
+//   return token;
+// };
+
+const parseTtl = (ttl: any) =>
+  /^\d+$/.test(String(ttl)) ? Number(ttl) : ttl;
+
+export const generateToken = async (args: GenerateTokenInterface) => {
+  const { username, email_id, loginid, tenant_id } = args as any;
+  const ttl = process.env.ACCESS_TOKEN_TTL || "1h";
+  return jsonwebtoken.sign(
+    { username, email_id, loginid, tenant_id },
+    constants.AUTHENTICATION.APP_SECRET as string,
+    { expiresIn: parseTtl(ttl) } as jsonwebtoken.SignOptions
   );
-  // Return the generated token
-  return token;
+};
+
+export const generateRefreshToken = async (args: GenerateTokenInterface) => {
+  const { username, email_id, loginid, tenant_id } = args as any;
+  const ttl = process.env.REFRESH_TOKEN_TTL || "365d";
+  const secret = process.env.REFRESH_TOKEN_SECRET || constants.AUTHENTICATION.APP_SECRET;
+  return jsonwebtoken.sign(
+    { username, email_id, loginid, tenant_id },
+    secret as string,
+    { expiresIn: parseTtl(ttl) } as jsonwebtoken.SignOptions
+  );
+};
+
+export const verifyRefreshToken = (token: string) => {
+  const secret = process.env.REFRESH_TOKEN_SECRET || constants.AUTHENTICATION.APP_SECRET;
+  return jsonwebtoken.verify(token, secret as string) as any;
+};
+
+export const ttlToMs = (ttl?: string) => {
+  if (!ttl || ttl === "none") return undefined;
+  if (/^\d+$/.test(ttl)) return Number(ttl) * 1000;
+  const m = ttl.match(/^(\d+)([smhd])$/);
+  if (!m) return undefined;
+  const mult: any = { s: 1000, m: 60000, h: 3600000, d: 86400000 };
+  return Number(m[1]) * mult[m[2]];
 };
 
 // Function to build a tree structure from row data and permissions

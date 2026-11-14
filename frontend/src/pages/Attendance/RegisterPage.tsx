@@ -1,9 +1,12 @@
 import { ColDef } from 'ag-grid-community';
-import ActionButtonsGroup from 'components/buttons/ActionButtonsGroup';
-import CustomAgGrid from 'components/grid/CustomAgGrid';
-import { useState, useEffect, useMemo } from 'react';
-import { TAvailableActionButtons } from 'types/types.actionButtonsGroups';
-import axiosServices from 'utils/axios';
+import ActionButtonsGroup from '../../components/buttons/ActionButtonsGroup';
+import CustomAgGrid from '../../components/grid/CustomAgGrid';
+      import { useState, useEffect, useMemo } from 'react';
+import { TAvailableActionButtons } from '../../types/types.actionButtonsGroups';
+import axiosServices from '../../utils/axios';
+import { TeamOutlined } from '@ant-design/icons';
+import dayjs from 'dayjs';
+
 const RegisterPage = () => {
   const [employees, setEmployees] = useState<any>([]);
   const [loading, setLoading] = useState(true);
@@ -18,12 +21,26 @@ const RegisterPage = () => {
         sortable: true,
         filter: true
       },
+      // {
+      //   headerName: 'Full Name',
+      //   field: 'FULL_NAME',
+      //   sortable: true,
+      //   filter: true
+      // },
       {
-        headerName: 'Full Name',
-        field: 'FULL_NAME',
-        sortable: true,
-        filter: true
-      },
+  headerName: 'Full Name',
+  field: 'FULL_NAME',
+  sortable: true,
+  filter: true,
+  cellRenderer: (p: { value: string }) => (
+    <div className="flex items-center gap-2">
+      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-50 text-[10px] font-bold text-[#082a89]">
+        {p.value?.charAt(0)?.toUpperCase()}
+      </span>
+      <span className="font-medium text-slate-800">{p.value}</span>
+    </div>
+  )
+},
       {
         headerName: 'Email',
         field: 'EMAIL',
@@ -46,7 +63,8 @@ const RegisterPage = () => {
         headerName: 'Hire Date',
         field: 'HIRE_DATE',
         sortable: true,
-        filter: true
+        filter: true,
+         valueFormatter: (p: any) => (p.value ? dayjs(p.value).format('DD MMM YYYY') : '-')
       },
       {
         headerName: 'Phone Number',
@@ -54,14 +72,20 @@ const RegisterPage = () => {
         sortable: true,
         filter: true
       },
-      {
-        headerName: 'Employee Code',
-        field: 'EMPLOYEE_CODE',
-        sortable: true,
-        filter: true
-      },
+      // {
+      //   headerName: 'Employee Code',
+      //   field: 'EMPLOYEE_CODE',
+      //   sortable: true,
+      //   filter: true
+      // },
       {
         headerName: 'Actions',
+        width: 110,
+  flex: 0,
+  pinned: 'right',
+  sortable: false,
+  filter: false,
+  resizable: false,
         cellRenderer: (params: { data: any }) => {
           const actionButtons: TAvailableActionButtons[] = ['edit', 'delete'];
           function handleActions(action: any, data: any): void {
@@ -93,8 +117,11 @@ const RegisterPage = () => {
     fetchEmployees();
   }, []);
 
-  if (loading) return <div>Loading employees...</div>;
-  if (error) return <div>Error: {error}</div>;
+  // if (loading) return <div>Loading employees...</div>;
+  // if (error) return <div>Error: {error}</div>;
+
+  if (loading) return <div className="flex h-[60vh] items-center justify-center text-sm text-slate-500">Loading employees...</div>;
+if (error) return <div className="m-4 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">{error}</div>;
 
   console.log("employees1", employees.data?.[0].FULL_NAME)
   console.log("employees", employees)

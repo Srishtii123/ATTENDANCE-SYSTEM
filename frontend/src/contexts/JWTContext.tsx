@@ -30,8 +30,10 @@ const verifyToken: (st: string) => boolean = (serviceToken) => {
     return false;
   }
   try {
-    jwtDecode(serviceToken);
-    return true;
+    // jwtDecode(serviceToken);
+    // return true;
+    const decoded: KeyedObject = jwtDecode(serviceToken);
+    return !decoded.exp || decoded.exp * 1000 > Date.now();
   } catch (e) {
     return false;
   }
@@ -199,6 +201,8 @@ export const JWTProvider = ({ children }: { children: React.ReactElement }) => {
                 permissionBasedMenuTree
               }
             });
+          }  else {
+            dispatch({ type: LOGOUT });
           }
         }
       } catch (err) {

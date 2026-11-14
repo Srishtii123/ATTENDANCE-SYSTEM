@@ -9,7 +9,7 @@ import {
   WarningOutlined
 } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
-import attendanceServiceInstance from 'service/Attendance/Service.attendance';
+import attendanceServiceInstance from '../../../service/Attendance/Service.attendance';
 import { Area, Column } from '@ant-design/charts';
 import { useMemo, useState } from 'react';
 import type { ReactNode } from 'react';

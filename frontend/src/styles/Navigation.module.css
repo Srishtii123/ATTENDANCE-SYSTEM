@@ -1,25 +1,26 @@
 .sidebar {
-  box-shadow: 10px 0 30px rgba(0, 0, 0, 0.22);
-  width: 180px;
-  transition: width 0.3s ease;
-  position: sticky; /* ✅ keep this */
-  top: 0; /* ✅ keep this */
-  height: 100vh; /* ✅ keep this */
-  overflow-y: hidden;
+  box-shadow: 14px 0 40px rgba(10, 22, 43, 0.08);
+  width: 248px;
+  transition: width 0.24s ease;
+  position: sticky;
+  top: 64px;
+  height: calc(100vh - 64px);
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding: 0px;
-  border-right: 1px solid #2c2f35;
-  min-height: unset; /* ✅ REMOVE min-height: 100vh — this is the culprit */
-  align-self: flex-start; /* ✅ ADD this — critical for sticky to work in flex */
+  padding: 18px 12px;
+  border-right: 1px solid #202b42;
+  background: linear-gradient(180deg, #111a2e 0%, #10182a 100%);
+  min-height: unset;
+  align-self: flex-start;
 }
 
 .sidebar.collapsed {
-  width: 80px; /* Increased from 30px for better visibility */
+  width: 88px;
 }
 
 .sidebar.collapsed .menuItem {
-  padding: 12px 8px;
+  padding: 12px 10px;
   justify-content: center;
 }
 
@@ -49,9 +50,13 @@
 }
 
 .navList {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
   list-style: none;
   padding: 0;
-  max-height: calc(100vh - 200px); /* Adjust height accounting for title and logout section */
+  margin: 0;
+  max-height: calc(100vh - 100px);
   overflow-y: auto;
 
   /* Hide scrollbar for Chrome, Safari and Opera */
@@ -66,7 +71,6 @@
 
 .navItem {
   list-style: none;
-  /* margin: 4px 0; */
 }
 
 .subList {
@@ -82,9 +86,9 @@
 
 .logoutSection {
   margin-top: auto;
-  padding: 1rem;
-  border-top: 1px solid #2c2f35;
-  margin-bottom: 20px;
+  padding: 16px 8px 8px;
+  border-top: 1px solid #26334c;
+  margin-bottom: 0;
 }
 
 .logoutButton {
@@ -94,16 +98,16 @@
   gap: 8px;
   width: 100%;
   border: none;
-  border-radius: 0.25rem;
+  border-radius: 12px;
   cursor: pointer;
   background: none;
-  color: #9a9a96;
-  transition: background-color 0.2s;
+  color: #aab8cf;
+  transition: background-color 0.2s, color 0.2s;
 }
 
 .logoutButton:hover {
-  background-color: #1c1f24;
-  color: #f2f2f0;
+  background-color: #202c43;
+  color: #ffffff;
 }
 
 .logoutIcon {
@@ -118,12 +122,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 0;
+  padding: 10px 12px;
   cursor: pointer;
 }
 
 .menuHeader:hover {
-  background-color: #1c1f24;
+  background-color: #202c43;
 }
 
 .menuHeader h4 {
@@ -134,49 +138,50 @@
 .menuItem {
   display: flex;
   align-items: center;
-  padding: 0px;
+  gap: 12px;
+  min-height: 48px;
+  padding: 0 12px;
   text-decoration: none;
-  color: #d7d7d2;
+  color: #aab8cf;
   position: relative;
-  transition: all 0.2s ease-in-out;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease;
 }
 
 .menuItem:hover {
-  background-color: #1c1f24;
-  border-radius: 4px;
+  background-color: #1c2941;
+  color: #ffffff;
 }
 
 .menuItem.active {
-  background-color: #1c1f24 !important;
-  color: #5dcaa5 !important;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(110deg, rgba(38, 183, 142, 0.2), rgba(38, 183, 142, 0.08)) !important;
+  color: #8ce6cb !important;
+  border-color: rgba(99, 220, 181, 0.12);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(4, 12, 24, 0.18);
   font-weight: 600;
-  transform: scale(1.02);
 }
 
 .menuItem span:not(.icon) {
   flex: 1;
-  margin-right: 8px;
 }
 
 .menuItem span {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 180px; /* adjust based on your sidebar width */
+  max-width: 180px;
 }
 
 .menuItem a {
-  color: #d7d7d2;
+  color: inherit;
   text-decoration: none;
   display: block;
 }
 
 .menuItem a:before {
-  content: '|-';
-  margin-right: 8px;
-  /* color: #666; */
+  content: '';
 }
 
 .collapsed .menuItem {
@@ -188,28 +193,27 @@
 }
 
 .subMenu {
-  /* margin-left: 24px; */
   list-style: none;
-  padding-left: 0;
+  padding: 4px 0 4px 16px;
 }
 
 .activeIndicator {
   position: absolute;
   left: 0;
-  top: 0;
-  bottom: 0;
-  width: 4px;
-  background-color: #5dcaa5;
-  border-radius: 4px 0 0 4px;
+  top: 50%;
+  width: 3px;
+  height: 22px;
+  transform: translateY(-50%);
+  background-color: #58d5ad;
+  border-radius: 0 4px 4px 0;
 }
 
 .menuText {
   flex: 1;
-  margin-left: 12px;
 }
 
 .activeText {
-  color: #5dcaa5 !important;
+  color: #8ce6cb !important;
 }
 
 .chevron {
@@ -221,21 +225,21 @@
 }
 
 .active {
-  background-color: #1c1f24 !important;
-  color: #5dcaa5 !important;
+  background-color: #1c2941 !important;
+  color: #8ce6cb !important;
 }
 
 .active .menuItem {
-  background-color: #1c1f24 !important;
-  color: #5dcaa5 !important;
+  background-color: #1c2941 !important;
+  color: #8ce6cb !important;
 }
 
 .active .icon svg {
-  color: #5dcaa5 !important;
+  color: #8ce6cb !important;
 }
 
 .menuItem.active span {
-  color: #5dcaa5;
+  color: #8ce6cb;
 }
 
 .logoContainer {
@@ -260,7 +264,7 @@
 }
 
 .icon {
-  margin-right: 12px;
+  margin-right: 0;
   display: flex;
   align-items: center;
 }
@@ -283,9 +287,9 @@
   left: 0;
   top: 50%;
   transform: translateY(-50%);
-  width: 4px;
-  height: 70%;
-  background-color: #5dcaa5;
+  width: 3px;
+  height: 22px;
+  background-color: #58d5ad;
   border-radius: 0 4px 4px 0;
 }
 
@@ -293,20 +297,41 @@
   position: relative;
 }
 
-.activeIcon {
-  background-color: rgba(93, 202, 165, 0.14);
-  border-radius: 4px;
-  padding: 4px;
+.iconWrapper {
+  display: flex;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  align-items: center;
+  justify-content: center;
+  color: #91a2bc;
+  transition: color 0.18s ease, background-color 0.18s ease;
 }
 
-@media (max-width: 768px) {
+.menuItem:hover .iconWrapper {
+  color: #ffffff;
+}
+
+.menuItem.active .iconWrapper {
+  color: #76dfbd;
+}
+
+.activeIcon {
+  background-color: rgba(88, 213, 173, 0.12);
+  border-radius: 11px;
+}
+
+@media (max-width: 899px) {
   .sidebar {
     display: none;
   }
 }
 
 .groupTitle {
-  font-size: 16px;
-  font-weight: bold;
-  margin-bottom: 8px;
+  padding: 18px 12px 9px;
+  color: #71819a;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  margin-bottom: 4px;
 }

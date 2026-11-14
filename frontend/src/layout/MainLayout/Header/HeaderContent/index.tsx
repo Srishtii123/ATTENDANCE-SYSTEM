@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Box, useMediaQuery, Typography, Drawer, IconButton } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
-import { LogOut, ChevronDown, ChevronRight, Menu, Home, Settings, Users, FileText, Moon, Sun } from 'lucide-react';
+import { LogOut, ChevronDown, ChevronRight, Menu, Home, Settings, Users, FileText, ClipboardCheck, ShieldCheck, Moon, Sun } from 'lucide-react';
 import styles from '../../../../styles/Navigation.module.css';
 import MegaMenuSection from './MegaMenuSection';
 import MobileSection from './MobileSection';
@@ -27,11 +27,21 @@ const LucideIcons = {
   Settings,
   Users,
   FileText,
+  ClipboardCheck,
+  ShieldCheck,
   Menu,
   LogOut,
   ChevronDown,
   ChevronRight
 } as const;
+
+const menuIcons: Record<string, keyof typeof LucideIcons> = {
+  attendance_dashboard: 'Home',
+  attendance_approvals: 'ClipboardCheck',
+  attendance_employee_register: 'Users',
+  attendance_page: 'FileText',
+  attendance_proxy_logs: 'ShieldCheck'
+};
 
 interface MenuItem {
   id?: string;
@@ -67,8 +77,7 @@ const MenuItemComponent: React.FC<{
   }, [location.pathname]);
 
   const renderIcon = (icon: keyof typeof LucideIcons | string) => {
-    const iconName = (icon.charAt(0).toUpperCase() + icon.slice(1).toLowerCase()) as keyof typeof LucideIcons;
-    const IconComponent = LucideIcons[iconName];
+    const IconComponent = LucideIcons[icon as keyof typeof LucideIcons];
     return IconComponent ? (
       <div className={`${styles.iconWrapper} ${isActive ? styles.activeIcon : ''}`}>
         <IconComponent color={isActive ? '#5DCAA5' : '#9a9a96'} size={24} />
@@ -284,7 +293,7 @@ const HeaderContent = ({ isCollapsed, setIsCollapsed }: HeaderProps) => {
             title: typeof item.title === 'string' ? removeUnderscores(item.title) : 'Untitled',
             type: item.type || (item.children?.length ? 'collapse' : 'item'),
             url_path: item.url_path,
-            icon: item.icon,
+            icon: item.icon || (item.id ? menuIcons[item.id] : undefined),
             children: item.children ? processMenuItems(item.children) : undefined
           };
         });
@@ -314,11 +323,11 @@ const HeaderContent = ({ isCollapsed, setIsCollapsed }: HeaderProps) => {
           // <Button size="middle" onClick={handleHomeClick} shape="circle" icon={<Home style={{ color: '#082a89' }} />} />
           // Main text on home screen
           <>
-            <div className="flex cursor-pointer bg-[#111318] p-2 w-[180px]" onClick={handleHomeClick}>
+            <div className="flex w-[248px] cursor-pointer items-center bg-[#111a2e] p-2" onClick={handleHomeClick}>
               <Typography
                 variant="h4"
                 sx={{
-                  color: '#f2f2f0',
+                  color: '#f7f9fc',
                   fontWeight: 600,
                   letterSpacing: '0.5px',
                   lineHeight: 1,
@@ -333,9 +342,8 @@ const HeaderContent = ({ isCollapsed, setIsCollapsed }: HeaderProps) => {
             <div className="pl-1 cursor-pointer">
               <IoMenuOutline
                 size={35}
-                color="white"
+                color="#f7f9fc"
                 onClick={() => {
-                  console.log('clicked');
                   setIsCollapsed?.((prev: boolean) => !prev);
                 }}
               />
@@ -361,9 +369,9 @@ const HeaderContent = ({ isCollapsed, setIsCollapsed }: HeaderProps) => {
             display: { xs: 'block', lg: 'none' },
             '& .MuiDrawer-paper': {
               width: 280,
-              background: '#111318',
-              color: '#f2f2f0',
-              borderRight: '1px solid #2c2f35',
+              background: '#111a2e',
+              color: '#f7f9fc',
+              borderRight: '1px solid #27334a',
               height: '100%',
               '& > div': {
                 height: '100%',
@@ -374,12 +382,12 @@ const HeaderContent = ({ isCollapsed, setIsCollapsed }: HeaderProps) => {
         >
           <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
             {/* Drawer Header */}
-            <Box sx={{ p: 2, display: 'flex', alignItems: 'center', gap: 2, borderBottom: '1px solid #2c2f35' }}>
+            <Box sx={{ p: 2, display: 'flex', alignItems: 'center', gap: 2, borderBottom: '1px solid #27334a' }}>
               <img className="w-20 h-10" src={logo} alt="logo" />
               <Typography
                 variant="h4"
                 sx={{
-                  color: '#f2f2f0',
+                  color: '#f7f9fc',
                   fontWeight: 600,
                   letterSpacing: '0.5px',
                   lineHeight: 1,
@@ -422,7 +430,7 @@ const HeaderContent = ({ isCollapsed, setIsCollapsed }: HeaderProps) => {
 
             <Box
               sx={{
-                borderTop: '1px solid #2c2f35',
+                borderTop: '1px solid #27334a',
                 p: 2,
                 mt: 'auto'
               }}
@@ -439,8 +447,8 @@ const HeaderContent = ({ isCollapsed, setIsCollapsed }: HeaderProps) => {
                 }}
                 onClick={handleLogout}
               >
-                <LogOut size={20} color="#9a9a96" />
-                <Typography color="#9a9a96">Logout</Typography>
+                <LogOut size={20} color="#aab8cf" />
+                <Typography sx={{ color: '#aab8cf' }}>Logout</Typography>
               </Box>
             </Box>
           </Box>

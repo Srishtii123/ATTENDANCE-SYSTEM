@@ -7,6 +7,9 @@ import {
   comparePassword,
   formatRolePermissions,
   generateToken,
+  generateRefreshToken,
+  verifyRefreshToken,
+  ttlToMs,
   notifyUser,
 } from "../helpers/functions";
 import { loginSchema } from "../validation/auth.validation";
@@ -159,13 +162,33 @@ export const login = async (req: Request, res: Response) => {
       return;
     }
 
-    const token = await generateToken({
+        const tokenPayload = {
       username: user.dataValues.username,
       email_id: user.dataValues.email_id,
       loginid: user.dataValues.loginid,
+    };
+    const token = await generateToken(tokenPayload);
+
+    const refreshToken = await generateRefreshToken(tokenPayload);
+    const maxAge = ttlToMs(process.env.REFRESH_TOKEN_TTL || "365d");
+    res.cookie("refresh_token", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      path: "/",
+      maxAge,
     });
 
     res.status(constants.STATUS_CODES.OK).json({
+
+    // const token = await generateToken({
+    //   username: user.dataValues.username,
+    //   email_id: user.dataValues.email_id,
+    //   loginid: user.dataValues.loginid,
+    // });
+
+    // res.status(constants.STATUS_CODES.OK).json({
+
       success: true,
       data: { token },
     });
@@ -420,4 +443,61 @@ export const resetPassword = async (req: Request, res: Response) => {
     });
     return;
   }
+};
+
+const parseCookies = (header?: string) => {
+  const list: Record<string, string> = {};
+  if (!header) return list;
+  header.split(";").forEach((c) => {
+    const parts = c.split("=");
+    const key = parts.shift()?.trim();
+    if (key) list[key] = decodeURIComponent(parts.join("="));
+  });
+  return list;
+};
+
+const cookieOpts: any = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+  path: "/",
+};
+
+export const refresh = async (req: Request, res: Response) => {
+  try {
+    const refreshToken = parseCookies(req.headers.cookie)["refresh_token"];
+    if (!refreshToken) {
+      res.status(401).json({ success: false, message: "Refresh token missing" });
+      return;
+    }
+
+    let payload: any;
+    try {
+      payload = verifyRefreshToken(refreshToken);
+    } catch {
+      res.status(401).json({ success: false, message: "Invalid or expired refresh token" });
+      return;
+    }
+
+    const data = {
+      username: payload.username,
+      email_id: payload.email_id,
+      loginid: payload.loginid,
+    };
+    const token = await generateToken(data);
+    const newRefresh = await generateRefreshToken(data);
+    res.cookie("refresh_token", newRefresh, {
+      ...cookieOpts,
+      maxAge: ttlToMs(process.env.REFRESH_TOKEN_TTL || "365d"),
+    });
+
+    res.status(200).json({ success: true, data: { token } });
+  } catch (err: any) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+export const logout = async (req: Request, res: Response) => {
+  res.clearCookie("refresh_token", cookieOpts);
+  res.status(200).json({ success: true, message: "Logged out" });
 };

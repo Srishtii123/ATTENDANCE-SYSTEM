@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styles from '../../../styles/Navigation.module.css';
-import { LogOut, ChevronDown, ChevronRight, Menu, Home, Settings, Users, FileText } from 'lucide-react';
+import { LogOut, ChevronDown, ChevronRight, Menu, Home, Settings, Users, FileText, ClipboardCheck, ShieldCheck } from 'lucide-react';
 import { dispatch, useSelector } from 'store';
 import { setSelectedApp } from 'store/reducers/customReducer/slice.menuSelectionSlice';
 import { getPathNameList } from 'utils/functions';
-import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import useScreenSize from 'hooks/useScreenSize';
 import { attendanceMenuTree } from 'menu-items/attendanceMenu';
 
@@ -23,6 +22,8 @@ const LucideIcons = {
   Settings,
   Users,
   FileText,
+  ClipboardCheck,
+  ShieldCheck,
   Menu,
   LogOut,
   ChevronDown,
@@ -57,11 +58,10 @@ const MenuItemComponent: React.FC<{
   }, [location.pathname]);
 
   const renderIcon = (icon: keyof typeof LucideIcons | string) => {
-    const iconName = (icon.charAt(0).toUpperCase() + icon.slice(1).toLowerCase()) as keyof typeof LucideIcons;
-    const IconComponent = LucideIcons[iconName];
+    const IconComponent = LucideIcons[icon as keyof typeof LucideIcons];
     return IconComponent ? (
-      <div className={`${styles.iconWrapper} ${isActive ? styles.activeIcon : ''}`}>
-        <IconComponent color={isActive ? '#5DCAA5' : '#9a9a96'} size={24} />
+      <div className={`${styles.iconWrapper} ${isActive ? styles.activeIcon : ''}`} aria-hidden="true">
+        <IconComponent size={19} strokeWidth={1.8} />
       </div>
     ) : null;
   };
@@ -76,22 +76,13 @@ const MenuItemComponent: React.FC<{
             setActiveItemId(item.id || null);
           }}
           title={formatTitle(item.title)} // Add tooltip
-          style={{
-            position: 'relative',
-            ...(isActive
-              ? {
-                  backgroundColor: '#1c1f24',
-                  borderRadius: '8px',
-                  boxShadow: 'inset 0 0 0 1px #2c2f35'
-                }
-              : {})
-          }}
+          style={{ position: 'relative' }}
         >
           {isActive && <div className={styles.activeIndicator} />}
           {/* items icon */}
           {/* {item.icon && <ChevronRight size={24} strokeWidth={2} color={isActive ? '#082a89' : '#fff'} />} */}
           {!isCollapsed && (
-            <span className={isActive ? styles.activeText : ''} style={{ paddingLeft: 16 }}>
+            <span className={isActive ? styles.activeText : ''}>
               {formatTitle(item.title)}
             </span>
           )}
@@ -142,12 +133,9 @@ const MenuItemComponent: React.FC<{
           {item.icon && <span className={styles.icon}>{renderIcon(item.icon)}</span>}
 
           {!isCollapsed && (
-            <>
-              <FiberManualRecordIcon style={{ fontSize: 6, marginLeft: 4 }} fontSize="small" />
-              <span className={`${styles.menuText} ${isActive || hasSelectedChild ? styles.activeText : ''}`}>
-                {formatTitle(item.title)}
-              </span>
-            </>
+            <span className={`${styles.menuText} ${isActive || hasSelectedChild ? styles.activeText : ''}`}>
+              {formatTitle(item.title)}
+            </span>
           )}
           {/* sub small items arrow */}
           {/* {!isCollapsed && <ChevronRight size={16} className={styles.chevron} />} */}
@@ -221,28 +209,12 @@ const Navigation = ({ onClose, isCollapsed, setIsCollapsed }: NavigationProps) =
 
     const { children = [] } = attendanceMenuTree[selectAppIndex];
 
-    const itemsData =
-      children.length > 4
-        ? [
-            ...children.slice(0, 4),
-            {
-              id: `${Date.now()}`,
-              url_path: 'other',
-              title: 'More',
-              type: 'group',
-              children: children.slice(4).map((eachMenuItem) => ({
-                ...eachMenuItem,
-                type: 'collapse',
-                title: eachMenuItem.title || 'Untitled'
-              }))
-            }
-          ]
-        : children.map((child) => ({
-            ...child,
-            title: typeof child.title === 'string' ? child.title : 'Untitled'
-          }));
+    const itemsData = children.map((child) => ({
+      ...child,
+      title: typeof child.title === 'string' ? child.title : 'Untitled'
+    }));
 
-    setMenuItems((itemsData as MenuItem[]) || []);
+    setMenuItems(itemsData as MenuItem[]);
   };
 
   return (
@@ -251,20 +223,20 @@ const Navigation = ({ onClose, isCollapsed, setIsCollapsed }: NavigationProps) =
       style={{
         fontFamily: 'Inter, sans-serif',
         zIndex: 1000,
-        backgroundColor: '#111318',
-        color: '#f2f2f0',
-        marginTop: isMobile ? '40px' : '0',
+        backgroundColor: '#111a2e',
+        color: '#dce4f2',
+        marginTop: isMobile ? '64px' : '0',
         position: isMobile ? 'static' : 'fixed',
-        top: isMobile ? 'unset' : '40px',
+        top: isMobile ? 'unset' : '64px',
         left: isMobile ? 'unset' : '0',
-        height: isMobile ? '100%' : 'calc(100vh - 40px)',
-        paddingLeft: 2,
-        paddingRight: 2
+        height: isMobile ? '100%' : 'calc(100vh - 64px)',
+        paddingLeft: 8,
+        paddingRight: 8
       }}
     >
       <div
         style={{
-          height: isMobile ? 'auto' : 'calc(100vh - 40px)',
+          height: isMobile ? 'auto' : 'calc(100vh - 64px)',
           display: 'flex',
           flexDirection: 'column'
         }}
@@ -284,6 +256,15 @@ const Navigation = ({ onClose, isCollapsed, setIsCollapsed }: NavigationProps) =
                 key={item.id || index}
                 item={{
                   ...item,
+                  icon:
+                    item.icon ||
+                    ({
+                      attendance_dashboard: 'Home',
+                      attendance_approvals: 'ClipboardCheck',
+                      attendance_employee_register: 'Users',
+                      attendance_page: 'FileText',
+                      attendance_proxy_logs: 'ShieldCheck'
+                    }[item.id || ''] as keyof typeof LucideIcons | undefined),
                   title: item.title.replace(/\s+/g, ' ').trim() // Normalize whitespace
                 }}
                 isCollapsed={isCollapsed ?? true}

@@ -1,6 +1,6 @@
 import * as express from "express";
 import passport from "passport";
-import { login, me, resetPassword, forgotPassword } from "../controllers/auth.controller";
+import { login, me, resetPassword, forgotPassword ,logout ,refresh} from "../controllers/auth.controller";
 
 // Create a new Express router
 const router = express.Router();
@@ -11,7 +11,8 @@ const router = express.Router();
 router.post("/login", login);
 router.post("/forgotPassword", forgotPassword);
 router.post("/resetPassword", resetPassword);
-
+router.post("/logout", logout);
+router.post("/refresh", refresh);  
 // Define the me route
 // This route accepts a GET request and requires a valid JWT token
 // to be passed in the Authorization header.

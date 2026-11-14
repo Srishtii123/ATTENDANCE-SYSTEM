@@ -32,22 +32,22 @@ const MainLayout = () => {
       <Box
         component="main"
         sx={{
-          marginLeft: { xs: 0, sm: 0, md: isCollapsed ? '80px' : '180px' },
-          width: { xs: '100%', sm: '100%', md: isCollapsed ? 'calc(100% - 80px)' : 'calc(100% - 180px)' },
+          marginLeft: { xs: 0, sm: 0, md: isCollapsed ? '88px' : '248px' },
+          width: { xs: '100%', sm: '100%', md: isCollapsed ? 'calc(100% - 88px)' : 'calc(100% - 248px)' },
           flexGrow: 1,
-          p: { xs: 1, sm: 1 },
+          p: { xs: 1, sm: 2 },
           bgcolor: 'background.default',
           color: 'text.primary',
           transition: 'margin-left 0.2s ease'
         }}
       >
-        <Toolbar />
+        <Toolbar sx={{ minHeight: '64px !important' }} />
         <Container
           maxWidth={container ? 'xl' : false}
           sx={{
             ...(container && { px: { xs: 0, sm: 1 } }),
             position: 'relative',
-            minHeight: 'calc(100vh - 110px)',
+            minHeight: 'calc(100vh - 88px)',
             display: 'flex',
             flexDirection: 'column'
           }}

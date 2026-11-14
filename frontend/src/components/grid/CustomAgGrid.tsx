@@ -1,7 +1,10 @@
+declare module 'ag-grid-community/styles/ag-grid.css';
+declare module 'ag-grid-community/styles/ag-theme-alpine.css';
+
 import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from 'ag-grid-community';
 import { useMemo, forwardRef, useImperativeHandle, useEffect } from 'react';
-import 'ag-grid-community/styles/ag-grid.css';
+import '../../ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { useRef } from 'react';
 interface CustomAgGridProps {

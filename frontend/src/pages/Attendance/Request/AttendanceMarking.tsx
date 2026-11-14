@@ -17,6 +17,7 @@ import {
 } from '@ant-design/icons';
 import Webcam from 'react-webcam';
 import attendanceServiceInstance from 'service/Attendance/Service.attendance';
+import './attendanceTerminal.css';
 
 // MANUAL REQUEST MODAL
 const LegacyManualRequestModal = ({ onClose, defaultEventType }: { onClose: () => void; defaultEventType: 'check_in' | 'check_out' }) => {
@@ -952,10 +953,10 @@ const AttendanceMarking = () => {
           : { label: 'Ready', color: 'text-emerald-700', dot: 'bg-emerald-500', ring: 'border-emerald-400', glow: 'shadow-emerald-500/40' };
 
   return (
-    <div className="relative bg-[#0d1117] text-[#f2f2f0] min-[600px]:h-[calc(100dvh-132px)] min-[600px]:min-h-0 min-[600px]:overflow-hidden">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_8%,rgba(93,202,165,0.16),transparent_30%),radial-gradient(circle_at_88%_18%,rgba(133,183,235,0.11),transparent_26%),linear-gradient(180deg,#11161d_0%,#0d1117_56%,#090c11_100%)]" />
-      <div className="relative mx-auto flex min-h-0 w-full max-w-[1500px] flex-col gap-2 px-3 py-2 sm:px-5 min-[600px]:h-full min-[600px]:px-3 min-[600px]:py-1 lg:px-4">
-        <div className="flex shrink-0 flex-col gap-2 rounded-2xl border border-[#253039] bg-[rgba(24,29,35,0.74)] p-3 shadow-[0_18px_60px_rgba(0,0,0,0.22)] backdrop-blur min-[600px]:flex-row min-[600px]:items-center min-[600px]:justify-between min-[600px]:p-2">
+    <div className="attendance-terminal-page relative min-h-[calc(100dvh-120px)] bg-[#f4f7fb] text-slate-900">
+      <div className="attendance-terminal-backdrop pointer-events-none absolute inset-0" />
+      <div className="attendance-terminal-content relative mx-auto flex min-h-0 w-full max-w-[1500px] flex-col gap-4 px-3 py-4 sm:px-5 lg:px-6 lg:py-6">
+        <div className="attendance-terminal-header flex shrink-0 flex-col gap-3 rounded-2xl border border-[#253039] bg-[rgba(24,29,35,0.74)] p-3 shadow-[0_18px_60px_rgba(0,0,0,0.22)] backdrop-blur min-[600px]:flex-row min-[600px]:items-center min-[600px]:justify-between sm:p-5">
           <div>
             <div className="mb-1 inline-flex items-center gap-2 rounded-full border border-[#214f45] bg-[rgba(93,202,165,0.12)] px-3 py-1 text-xs font-semibold text-[#6fe2bd] shadow-sm min-[600px]:py-0.5">
               <span className={`h-2 w-2 rounded-full ${terminalState.dot}`} />
@@ -976,11 +977,12 @@ const AttendanceMarking = () => {
           </div>
         </div>
 
-        <div className="grid gap-3 min-[600px]:min-h-0 min-[600px]:grid-cols-1 min-[600px]:items-start min-[600px]:gap-2 xl:grid-cols-[1.05fr_0.95fr] xl:gap-3">
-          <section className="relative min-h-[360px] overflow-hidden rounded-2xl border border-[#253039] bg-[rgba(24,29,35,0.9)] text-[#f2f2f0] shadow-[0_24px_90px_rgba(0,0,0,0.28)] backdrop-blur min-[600px]:min-h-[270px] lg:min-h-[300px] xl:min-h-[360px]">
+        {/* <div className="grid gap-3 min-[600px]:min-h-0 min-[600px]:grid-cols-1 min-[600px]:items-start min-[600px]:gap-2 xl:grid-cols-[1.05fr_0.95fr] xl:gap-3"> */}
+         <div className="attendance-terminal-grid grid gap-3 min-[600px]:min-h-0 min-[600px]:flex-1 min-[600px]:grid-cols-1 min-[600px]:items-stretch min-[600px]:gap-2 xl:grid-cols-[1.05fr_0.95fr] xl:gap-3">
+          <section className="attendance-terminal-visual relative min-h-[360px] overflow-hidden rounded-2xl border border-[#253039] bg-[rgba(24,29,35,0.9)] text-[#f2f2f0] shadow-[0_24px_90px_rgba(0,0,0,0.28)] backdrop-blur min-[600px]:min-h-[270px] lg:min-h-[300px] xl:min-h-[360px]">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_18%,rgba(93,202,165,0.22),transparent_34%),radial-gradient(circle_at_70%_78%,rgba(239,159,39,0.08),transparent_28%),linear-gradient(135deg,rgba(31,39,46,0.92)_0%,rgba(20,24,30,0.96)_54%,rgba(12,16,22,0.98)_100%)]" />
             <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#5DCAA5]/70 to-transparent" />
-            <div className="relative grid h-full gap-3 p-4 min-[600px]:grid-cols-[1fr_260px] min-[600px]:items-center min-[720px]:grid-cols-[1fr_300px] lg:grid-cols-[1fr_340px] xl:flex xl:flex-col xl:gap-3">
+            <div className="attendance-terminal-visual-inner relative grid h-full gap-3 p-4 min-[600px]:grid-cols-[1fr_260px] min-[600px]:items-center min-[720px]:grid-cols-[1fr_300px] lg:grid-cols-[1fr_340px] xl:flex xl:flex-col xl:gap-3">
               <div className="flex items-center justify-between gap-3">
                 <div className="max-w-xl">
                   <div className="text-xs font-bold uppercase tracking-[0.22em] text-[#5DCAA5] min-[600px]:text-[10px]">Biometric access</div>
@@ -1024,8 +1026,9 @@ const AttendanceMarking = () => {
             </div>
           </section>
 
-          <section className="flex min-h-0 flex-col gap-3 min-[600px]:gap-2">
-            <div className="relative overflow-hidden rounded-2xl border border-[#253039] bg-[rgba(24,29,35,0.9)] p-3 shadow-[0_20px_70px_rgba(0,0,0,0.22)] backdrop-blur min-[600px]:p-3 xl:p-3">
+          <section className="attendance-terminal-actions flex min-h-0 flex-col gap-3 min-[600px]:gap-2 xl:h-full">
+            {/* <div className="relative overflow-hidden rounded-2xl border border-[#253039] bg-[rgba(24,29,35,0.9)] p-3 shadow-[0_20px_70px_rgba(0,0,0,0.22)] backdrop-blur min-[600px]:p-3 xl:p-3"> */}
+              <div className="attendance-action-panel relative flex flex-col overflow-hidden rounded-2xl border border-[#253039] bg-[rgba(24,29,35,0.9)] p-3 xl:flex-1 shadow-[0_20px_70px_rgba(0,0,0,0.22)] backdrop-blur sm:p-5">
               <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#85B7EB]/60 to-transparent" />
               <div className="mb-3 flex items-start justify-between gap-3 min-[600px]:mb-2">
                 <div>
@@ -1035,10 +1038,11 @@ const AttendanceMarking = () => {
                 <ScanOutlined className="text-2xl text-[#5DCAA5]" />
               </div>
 
-              <div className="grid gap-2 min-[600px]:grid-cols-3 min-[600px]:gap-2 xl:grid-cols-1 xl:gap-1.5">
+              {/* <div className="grid gap-2 min-[600px]:grid-cols-3 min-[600px]:gap-2 xl:grid-cols-1 xl:gap-1.5"> */}
+              <div className="attendance-action-list grid gap-2 min-[600px]:grid-cols-3 min-[600px]:gap-2 xl:flex-1 xl:grid-cols-1 xl:grid-rows-3 xl:gap-2">
                 <button
                   onClick={() => handleActionClick('check-in')}
-                  className="group flex items-center justify-between rounded-xl border border-[#253039] bg-[linear-gradient(135deg,rgba(30,37,44,0.96),rgba(18,22,28,0.96))] p-3 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] transition duration-200 hover:border-[#1D9E75] hover:bg-[#20242b] hover:shadow-[0_18px_45px_rgba(29,158,117,0.1)] active:scale-[0.99] min-[600px]:min-h-[104px] min-[600px]:flex-col min-[600px]:items-start min-[600px]:p-3 xl:min-h-0 xl:flex-row xl:items-center xl:p-3"
+                  className="attendance-action-card attendance-action-check-in group flex items-center justify-between rounded-xl border border-[#253039] bg-[linear-gradient(135deg,rgba(30,37,44,0.96),rgba(18,22,28,0.96))] p-3 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] transition duration-200 hover:border-[#1D9E75] hover:bg-[#20242b] hover:shadow-[0_18px_45px_rgba(29,158,117,0.1)] active:scale-[0.99] min-[600px]:min-h-[104px] min-[600px]:flex-col min-[600px]:items-start sm:p-4 xl:min-h-0 xl:flex-row xl:items-center"
                 >
                   <div className="flex items-center gap-4 min-[600px]:flex-col min-[600px]:items-start min-[600px]:gap-3 xl:flex-row xl:items-center">
                     <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[rgba(93,202,165,0.14)] text-[#5DCAA5] shadow-lg min-[600px]:h-10 min-[600px]:w-10 lg:h-11 lg:w-11">
@@ -1054,7 +1058,7 @@ const AttendanceMarking = () => {
 
                 <button
                   onClick={() => handleActionClick('check-out')}
-                  className="group flex items-center justify-between rounded-xl border border-[#253039] bg-[linear-gradient(135deg,rgba(30,37,44,0.96),rgba(18,22,28,0.96))] p-3 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] transition duration-200 hover:border-[#85B7EB] hover:bg-[#20242b] hover:shadow-[0_18px_45px_rgba(133,183,235,0.1)] active:scale-[0.99] min-[600px]:min-h-[104px] min-[600px]:flex-col min-[600px]:items-start min-[600px]:p-3 xl:min-h-0 xl:flex-row xl:items-center xl:p-3"
+                  className="attendance-action-card attendance-action-check-out group flex items-center justify-between rounded-xl border border-[#253039] bg-[linear-gradient(135deg,rgba(30,37,44,0.96),rgba(18,22,28,0.96))] p-3 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] transition duration-200 hover:border-[#85B7EB] hover:bg-[#20242b] hover:shadow-[0_18px_45px_rgba(133,183,235,0.1)] active:scale-[0.99] min-[600px]:min-h-[104px] min-[600px]:flex-col min-[600px]:items-start sm:p-4 xl:min-h-0 xl:flex-row xl:items-center"
                 >
                   <div className="flex items-center gap-4 min-[600px]:flex-col min-[600px]:items-start min-[600px]:gap-3 xl:flex-row xl:items-center">
                     <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[rgba(133,183,235,0.14)] text-[#85B7EB] shadow-lg min-[600px]:h-10 min-[600px]:w-10 lg:h-11 lg:w-11">
@@ -1073,7 +1077,7 @@ const AttendanceMarking = () => {
                     setManualRequestReason('');
                     setShowManualRequest(true);
                   }}
-                  className="flex items-center justify-between rounded-xl border border-[#253039] bg-[linear-gradient(135deg,rgba(30,37,44,0.96),rgba(18,22,28,0.96))] p-3 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] transition duration-200 hover:border-[#EF9F27] hover:bg-[#20242b] hover:shadow-[0_18px_45px_rgba(239,159,39,0.1)] active:scale-[0.99] min-[600px]:min-h-[104px] min-[600px]:flex-col min-[600px]:items-start min-[600px]:p-3 xl:min-h-0 xl:flex-row xl:items-center xl:p-3"
+                  className="attendance-action-card attendance-action-manual flex items-center justify-between rounded-xl border border-[#253039] bg-[linear-gradient(135deg,rgba(30,37,44,0.96),rgba(18,22,28,0.96))] p-3 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] transition duration-200 hover:border-[#EF9F27] hover:bg-[#20242b] hover:shadow-[0_18px_45px_rgba(239,159,39,0.1)] active:scale-[0.99] min-[600px]:min-h-[104px] min-[600px]:flex-col min-[600px]:items-start sm:p-4 xl:min-h-0 xl:flex-row xl:items-center"
                 >
                   <div className="flex items-center gap-4 min-[600px]:flex-col min-[600px]:items-start min-[600px]:gap-3 xl:flex-row xl:items-center">
                     <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[rgba(239,159,39,0.14)] text-[#EF9F27] shadow-lg min-[600px]:h-10 min-[600px]:w-10 lg:h-11 lg:w-11">
@@ -1089,7 +1093,7 @@ const AttendanceMarking = () => {
               </div>
             </div>
 
-            <div className="hidden rounded-2xl border border-[#2c2f35] bg-[#1c1f24] p-3 shadow-sm xl:block">
+            <div className="attendance-terminal-health rounded-2xl border border-[#2c2f35] bg-[#1c1f24] p-3 shadow-sm xl:block">
               <div className="mb-3 flex items-center justify-between md:mb-2">
                 <div>
                   <h3 className="text-sm font-semibold text-[#f2f2f0]">System Health</h3>
@@ -1109,7 +1113,8 @@ const AttendanceMarking = () => {
                 ].map((item) => (
                   <div key={item.label} className="rounded-xl border border-[#2c2f35] bg-[#14161a] px-3 py-2 min-[600px]:px-2 min-[600px]:py-1.5">
                     <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#7a7a76] min-[600px]:tracking-normal">{item.label}</div>
-                    <div className="mt-1 text-sm font-semibold text-[#f2f2f0] min-[600px]:mt-0.5">{item.value}</div>
+                    {/* <div className="mt-1 text-sm font-semibold text-[#f2f2f0] min-[600px]:mt-0.5">{item.value}</div> */}
+                    <div className={`mt-1 text-sm font-semibold min-[600px]:mt-0.5 ${item.value === '-' ? 'text-[#4b5563]' : 'text-[#f2f2f0]'}`}>{item.value}</div>
                   </div>
                 ))}
               </div>
@@ -1121,9 +1126,9 @@ const AttendanceMarking = () => {
 
       {/* Camera Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-[20000] flex items-center justify-center bg-[#05080d] p-0 text-white sm:p-3">
-          <div className="flex h-screen w-full flex-col overflow-hidden rounded-none border border-white/10 bg-[#0a0f17] shadow-2xl sm:h-[calc(100dvh-24px)] sm:max-w-[min(1600px,calc(100vw-24px))] sm:rounded-3xl">
-            <div className="flex shrink-0 items-center justify-between border-b border-white/10 bg-[#0d121a] px-3 py-2 sm:px-4">
+        <div className="attendance-camera-overlay fixed inset-0 z-[20000] flex items-center justify-center bg-[#05080d] p-0 text-white sm:p-4">
+          <div className="attendance-camera-dialog flex h-screen w-full flex-col overflow-hidden rounded-none border border-white/10 bg-[#0a0f17] shadow-2xl sm:h-[calc(100dvh-32px)] sm:max-w-[min(1360px,calc(100vw-32px))] sm:rounded-3xl">
+            <div className="attendance-camera-header flex shrink-0 items-center justify-between border-b border-white/10 bg-[#0d121a] px-3 py-2 sm:px-5 sm:py-4">
               <div className="flex items-center flex-wrap gap-2">
                 <span className={`h-2.5 w-2.5 rounded-full ${terminalState.dot}`} />
                 <span className={`text-xs font-bold uppercase tracking-[0.2em] ${terminalState.color}`}>{terminalState.label}</span>
@@ -1147,7 +1152,7 @@ const AttendanceMarking = () => {
               </button>
             </div>
 
-            <div className="flex min-h-0 flex-1 items-center overflow-hidden bg-[radial-gradient(circle_at_20%_10%,rgba(93,202,165,0.15),transparent_34%),linear-gradient(180deg,#101722,#080c12)] p-3 sm:p-4">
+            <div className="attendance-camera-workspace flex min-h-0 flex-1 items-center overflow-hidden bg-[radial-gradient(circle_at_20%_10%,rgba(93,202,165,0.15),transparent_34%),linear-gradient(180deg,#101722,#080c12)] p-3 sm:p-5">
               {status === 'error' ? (
                 <div className="text-center py-8 sm:py-10 bg-red-50 border border-red-100 rounded-2xl">
                   <div className="w-16 h-16 sm:w-20 sm:h-20 bg-red-500/15 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -1178,7 +1183,7 @@ const AttendanceMarking = () => {
               ) : (
                 <div className="grid h-full min-h-0 w-full items-center gap-3 lg:grid-cols-[minmax(0,1fr)_300px] xl:grid-cols-[minmax(0,1fr)_340px]">
                   <div
-                    className="relative mx-auto min-h-[260px] w-full overflow-hidden rounded-3xl border border-white/10 bg-black shadow-[0_24px_90px_rgba(0,0,0,0.45)]"
+                    className="attendance-camera-frame relative mx-auto min-h-[260px] w-full overflow-hidden rounded-3xl border border-white/10 bg-black shadow-[0_24px_90px_rgba(0,0,0,0.45)]"
                     style={{ height: getCameraContainerHeight() }}
                   >
                     <Webcam
@@ -1257,7 +1262,7 @@ const AttendanceMarking = () => {
                       </div>
                     )}
                   </div>
-                  <div className="hidden min-h-0 rounded-3xl border border-white/10 bg-white/[0.06] p-4 shadow-[0_18px_60px_rgba(0,0,0,0.22)] backdrop-blur lg:flex lg:flex-col">
+                  <div className="attendance-camera-guidance hidden min-h-0 rounded-3xl border border-white/10 bg-white/[0.06] p-4 shadow-[0_18px_60px_rgba(0,0,0,0.22)] backdrop-blur lg:flex lg:flex-col">
                     <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-cyan-100/60 mb-2">Live guidance</div>
                     <p className="text-white text-xl font-bold leading-snug mb-4">
                       {status === 'counting' ? `Capturing in ${countdown} seconds...` : 'Position your face within the green frame'}
@@ -1400,5 +1405,3 @@ const AttendanceMarking = () => {
 };
 
 export default AttendanceMarking;
-
-
